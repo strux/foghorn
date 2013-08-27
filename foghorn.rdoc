@@ -1,0 +1,5 @@
+= foghorn
+
+Generate this with
+    foghorn rdoc
+After you have described your command line interface

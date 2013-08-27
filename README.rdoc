@@ -1,0 +1,19 @@
+= foghorn
+
+This application attempts to DRY up AppFog deployment code across MTN by wrapping the af gem with sensible defaults and MTN naming conventions.
+
+== Bash tab completion
+Add the following to your .bashrc
+
+  complete -F get_todo_commands todo
+  function get_todo_commands()
+  {
+    if [ -z $2 ] ; then
+      COMPREPLY=(`todo help -c`)
+    else
+      COMPREPLY=(`todo help -c $2`)
+    fi
+  }
+
+:include:foghorn.rdoc
+
