@@ -1,6 +1,6 @@
 = foghorn
 
-This application attempts to DRY up AppFog deployment code across MTN by wrapping the af gem with sensible defaults and MTN naming conventions.
+This application is a command suite (GLI) that wraps the AppFog CLI in an opinionated way with an aim at standardizing deployment scripts across an organization.
 
 == Bash tab completion
 Add the following to your .bashrc
