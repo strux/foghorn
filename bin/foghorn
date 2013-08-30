@@ -7,13 +7,41 @@ require 'foghorn'
 include GLI::App
 config_file File.join(Dir.pwd, '.foghorn.rc.yaml')
 
+def execute?(command)
+  system "#{command} >& /dev/null"
+end
+
+def execute(command, desc)
+  stdout_str, stderr_str, status = Open3.capture3(command)
+  format = "%-40s %s"
+  if status.success?
+    puts sprintf(format, desc, "PASS".color(:green))
+  else
+    puts sprintf(format, desc, "FAIL".color(:red))
+    STDERR.puts stdout_str
+    exit 1
+  end
+end
+
+def app_root_path
+  File.expand_path('../', `git rev-parse --show-cdup`)
+end
+
+
+
 program_desc 'Keeps you off the rocks when the AppFog rolls in.'
 
 version Foghorn::VERSION
 
+# name (application)
+# suffix (unique)
+# ignore prefix?(only use name above instead of concat)
+# patter? for name
+# env vars
+# multiple for same flag? ^^
+
 desc 'AppFog email'
 flag [:email,:e]
-arg_name 'email'
 
 desc 'AppFog password'
 flag [:password,:p]
@@ -24,6 +52,10 @@ flag [:application_email,:E]
 desc 'AppFog target'
 flag [:target,:t]
 default_value 'http://proxy.af.mtnsatcloud.com'
+
+desc 'Application basename'
+flag [:basename]
+default_value File.basename(app_root_path)
 
 desc 'Deploy application to AppFog'
 command :deploy do |c|
@@ -62,7 +94,7 @@ pre do |global,command,options,args|
   # chosen command
   # Use skips_pre before a command to skip this block
   # on that command only
-
+  
   raise ArgumentError, "--email required" unless global[:email]
   raise ArgumentError, "--password required" unless global[:password]
 
@@ -87,22 +119,6 @@ end
 on_error do |exception|
   # return false to skip default error handling
   true
-end
-
-def execute?(command)
-  system "#{command} >& /dev/null"
-end
-
-def execute(command, desc)
-  stdout_str, stderr_str, status = Open3.capture3(command)
-  format = "%-40s %s"
-  if status.success?
-    puts sprintf(format, desc, "PASS".color(:green))
-  else
-    puts sprintf(format, desc, "FAIL".color(:red))
-    STDERR.puts stdout_str
-    exit 1
-  end
 end
 
 exit run(ARGV)
