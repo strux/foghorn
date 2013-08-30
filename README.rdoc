@@ -5,13 +5,13 @@ This application is a command suite (GLI) that wraps the AppFog CLI in an opinio
 == Bash tab completion
 Add the following to your .bashrc
 
-  complete -F get_todo_commands todo
-  function get_todo_commands()
+  complete -F get_foghorn_commands foghorn
+  function get_foghorn_commands()
   {
     if [ -z $2 ] ; then
-      COMPREPLY=(`todo help -c`)
+      COMPREPLY=(`foghorn help -c`)
     else
-      COMPREPLY=(`todo help -c $2`)
+      COMPREPLY=(`foghorn help -c $2`)
     fi
   }
 
